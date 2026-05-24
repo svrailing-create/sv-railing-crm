@@ -1,20 +1,12 @@
 import { useState, useRef, useEffect } from "react";
 
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxIdHYxQChMVKYobFmafzyiQEDPdQ71BKli6vemzbKeBKjUd8IhG77A-GrrBJjSwoBa/exec";
+
 const C = {
   navy: "#1A2744", teal: "#00C9A7", coral: "#FF6B6B",
   gold: "#F5A623", bg: "#F0F2F8", card: "#FFFFFF",
   text: "#1A2744", muted: "#7A85A3", border: "#E2E8F0",
 };
-
-const SEED = [
-  { id:1, leadId:"LD/SV/26-27/0001", entryDate:"01.04.2026", leadType:"Project", source:"Reference", refBy:"Vishal Patadiya", clientName:"Dr Dev Ramoliya", contact:"7600420178", email:"", city:"Kuvadava", projectName:"", projectType:"Bungalow", address:"Kuvadava", siteCity:"Kuvadava", floors:"G+2", estRft:150, budgetRange:"", projectStage:"Finishing", urgency:"1 Month", material:"SS304 Powder Coated", productType:"", railingType:"", mountingType:"Top", finish:"Black", glassSpec:"12", architect:"", archContact:"", assignTo:"SB", siteVisit:"01.04.2026", measurements:"01.04.2026", quotationStatus:"Revised", amount:400000, lastQuotDate:"04.04.2026", lastFollowup:"", nextFollowup:"", notes:"", status:"Negotiations", finalDeal:null, expectedClosure:"", lostReason:"", jmsDone:"", finalRft:"", productionStatus:"", installationStatus:"", billingStatus:"", photos:[] },
-  { id:2, leadId:"LD/SV/26-27/0002", entryDate:"01.04.2026", leadType:"Project", source:"Site Visit", refBy:"", clientName:"Virendra Vagadiya", contact:"9427236218", email:"", city:"Rajkot", projectName:"", projectType:"Bungalow", address:"Vrdhman Nagar", siteCity:"Rajkot", floors:"G+2", estRft:null, budgetRange:"", projectStage:"Construction", urgency:"2 Months", material:"", productType:"", railingType:"", mountingType:"", finish:"", glassSpec:"", architect:"", archContact:"", assignTo:"SB", siteVisit:"01.04.2026", measurements:"", quotationStatus:"Not Sent", amount:null, lastQuotDate:"", lastFollowup:"", nextFollowup:"", notes:"", status:"Meeting Done", finalDeal:null, expectedClosure:"", lostReason:"", jmsDone:"", finalRft:"", productionStatus:"", installationStatus:"", billingStatus:"", photos:[] },
-  { id:3, leadId:"LD/SV/26-27/0003", entryDate:"01.04.2026", leadType:"Project", source:"Site Visit", refBy:"", clientName:"Bansi Vagadiya", contact:"9016199099", email:"", city:"Rajkot", projectName:"", projectType:"Bungalow", address:"Vrdhman Nagar", siteCity:"Rajkot", floors:"G+2", estRft:null, budgetRange:"", projectStage:"Construction", urgency:"2 Months", material:"", productType:"", railingType:"", mountingType:"", finish:"", glassSpec:"", architect:"", archContact:"", assignTo:"SB", siteVisit:"01.04.2026", measurements:"", quotationStatus:"Not Sent", amount:null, lastQuotDate:"", lastFollowup:"", nextFollowup:"", notes:"", status:"Meeting Done", finalDeal:null, expectedClosure:"", lostReason:"", jmsDone:"", finalRft:"", productionStatus:"", installationStatus:"", billingStatus:"", photos:[] },
-  { id:10, leadId:"LD/SV/26-27/0010", entryDate:"01.04.2026", leadType:"Retail", source:"Dealer", refBy:"", clientName:"Octane Enterprise", contact:"9370810999", email:"", city:"Kolhapur", projectName:"", projectType:"", address:"Kolhapur", siteCity:"Kolhapur", floors:"", estRft:null, budgetRange:"", projectStage:"", urgency:"Immediate", material:"Aluminium Powder Coated", productType:"T Brackets", railingType:"", mountingType:"Top", finish:"Silver", glassSpec:"12", architect:"", archContact:"", assignTo:"SB", siteVisit:"", measurements:"", quotationStatus:"Sent", amount:32175, lastQuotDate:"", lastFollowup:"", nextFollowup:"", notes:"", status:"Won", finalDeal:32175, expectedClosure:"", lostReason:"", jmsDone:"", finalRft:"", productionStatus:"Completed", installationStatus:"", billingStatus:"Done", photos:[] },
-  { id:15, leadId:"LD/SV/26-27/0015", entryDate:"01.04.2026", leadType:"Project", source:"End Client", refBy:"", clientName:"Nilesh Ghelani", contact:"9979105530", email:"", city:"Rajkot", projectName:"", projectType:"Bungalow", address:"Vavdi", siteCity:"Rajkot", floors:"G+2", estRft:null, budgetRange:"", projectStage:"Ready", urgency:"Immediate", material:"", productType:"", railingType:"", mountingType:"Top", finish:"Matt", glassSpec:"", architect:"", archContact:"", assignTo:"SB", siteVisit:"01.04.2026", measurements:"", quotationStatus:"Sent", amount:85000, lastQuotDate:"", lastFollowup:"", nextFollowup:"", notes:"", status:"Won", finalDeal:85000, expectedClosure:"", lostReason:"", jmsDone:"", finalRft:"", productionStatus:"", installationStatus:"", billingStatus:"", photos:[] },
-  { id:25, leadId:"LD/SV/26-27/0025", entryDate:"06.04.2026", leadType:"Retail", source:"Dealer", refBy:"", clientName:"Dadakrupa Glass", contact:"", email:"", city:"Jaipur", projectName:"K C Vadhrani", projectType:"", address:"", siteCity:"", floors:"", estRft:null, budgetRange:"", projectStage:"", urgency:"", material:"SS304", productType:"100x50x10mm Flat baluster", railingType:"", mountingType:"Top", finish:"Matt", glassSpec:"12", architect:"", archContact:"", assignTo:"SB", siteVisit:"", measurements:"", quotationStatus:"Sent", amount:561000, lastQuotDate:"", lastFollowup:"", nextFollowup:"", notes:"", status:"Negotiations", finalDeal:null, expectedClosure:"", lostReason:"", jmsDone:"", finalRft:"", productionStatus:"", installationStatus:"", billingStatus:"", photos:[] },
-  { id:30, leadId:"LD/SV/26-27/0030", entryDate:"13.04.2026", leadType:"Retail", source:"Dealer", refBy:"", clientName:"Mahaveer Metals", contact:"9929074147", email:"", city:"Jodhpur", projectName:"", projectType:"", address:"", siteCity:"", floors:"", estRft:null, budgetRange:"", projectStage:"Ready", urgency:"Immediate", material:"SS304", productType:"38mm HR Flexi bend", railingType:"", mountingType:"", finish:"Matt", glassSpec:"", architect:"", archContact:"", assignTo:"SB", siteVisit:"", measurements:"", quotationStatus:"Not Sent", amount:null, lastQuotDate:"", lastFollowup:"", nextFollowup:"", notes:"", status:"Lost", finalDeal:null, expectedClosure:"", lostReason:"Specification not available", jmsDone:"", finalRft:"", productionStatus:"", installationStatus:"", billingStatus:"", photos:[] },
-];
 
 const STATUS_COLORS = {
   "Won":{ bg:"#DCFCE7", text:"#166534" }, "Lost":{ bg:"#FEE2E2", text:"#991B1B" },
@@ -39,56 +31,25 @@ const FINISHES=["Black Powder Coat","Silver/White Powder Coat","Gold PVD","Rose 
 const PROD_STATUSES=["Not Started","In Progress","Complete"];
 const INSTALL_STATUSES=["Pending","Scheduled","Done"];
 const BILLING_STATUSES=["Pending","Partial","Complete"];
-const ASSIGN_TO=["SB","VV","Other"];
+const ASSIGN_TO=["Siddharth Bhatt","Viraj Vadodariya"];
 
 const fmt=(n)=>n?`₹${Number(n).toLocaleString("en-IN")}`:"—";
 const pct=(a,b)=>b?((a/b)*100).toFixed(1)+"%":"0%";
 
-// ── localStorage persistence ───────────────────────────────────
-const STORAGE_KEY = "sv_railing_leads_v1";
-function loadLeads() {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) return JSON.parse(saved);
-  } catch {}
-  return SEED;
-}
-function saveLeads(leads) {
-  try {
-    // strip photo base64 data to avoid localStorage quota — store only remark+type+name
-    const slim = leads.map(l => ({
-      ...l,
-      photos: (l.photos||[]).map(p => ({ ...p, url: p.url?.startsWith("data:") ? p.url : p.url }))
-    }));
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(slim));
-  } catch(e) {
-    // if quota exceeded (too many photos), save without photos
-    try {
-      const noPhotos = leads.map(l => ({ ...l, photos: [] }));
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(noPhotos));
-    } catch {}
-  }
-}
-
-// ── Responsive hook ────────────────────────────────────────────
 function useIsMobile() {
-  const [mobile, setMobile] = useState(window.innerWidth < 768);
-  useEffect(() => {
-    const fn = () => setMobile(window.innerWidth < 768);
-    window.addEventListener("resize", fn);
-    return () => window.removeEventListener("resize", fn);
-  }, []);
+  const [mobile,setMobile]=useState(window.innerWidth<768);
+  useEffect(()=>{ const fn=()=>setMobile(window.innerWidth<768); window.addEventListener("resize",fn); return()=>window.removeEventListener("resize",fn); },[]);
   return mobile;
 }
 
 function Badge({ status }) {
-  const c = STATUS_COLORS[status]||{ bg:"#F1F5F9", text:"#475569" };
+  const c=STATUS_COLORS[status]||{ bg:"#F1F5F9", text:"#475569" };
   return <span style={{ background:c.bg, color:c.text, padding:"2px 10px", borderRadius:20, fontSize:11, fontWeight:700, whiteSpace:"nowrap" }}>{status||"—"}</span>;
 }
 
 function KpiCard({ label, value, color }) {
   return (
-    <div style={{ background:"#fff", borderRadius:14, padding:"16px 20px", boxShadow:"0 2px 12px rgba(26,39,68,.07)", borderTop:`4px solid ${color}` }}>
+    <div style={{ background:"#fff", borderRadius:14, padding:"16px 18px", boxShadow:"0 2px 12px rgba(26,39,68,.07)", borderTop:`4px solid ${color}` }}>
       <div style={{ color:C.muted, fontSize:11, fontWeight:700, letterSpacing:1, textTransform:"uppercase" }}>{label}</div>
       <div style={{ color:C.text, fontSize:22, fontWeight:800, marginTop:6 }}>{value}</div>
     </div>
@@ -96,16 +57,16 @@ function KpiCard({ label, value, color }) {
 }
 
 function Input({ label, type="text", value, onChange, required, placeholder, options, half }) {
-  const isMobile = useIsMobile();
+  const isMobile=useIsMobile();
   const base={ width:"100%", padding:"10px 13px", borderRadius:8, border:"1.5px solid #E2E8F0", fontSize:14, color:C.text, background:"#FAFBFE", boxSizing:"border-box", outline:"none", fontFamily:"inherit" };
   return (
-    <div style={{ display:"flex", flexDirection:"column", gap:4, flex: half&&!isMobile ? "0 0 calc(50% - 6px)" : "1 1 100%" }}>
+    <div style={{ display:"flex", flexDirection:"column", gap:4, flex:half&&!isMobile?"0 0 calc(50% - 6px)":"1 1 100%" }}>
       <label style={{ fontSize:12, fontWeight:600, color:C.muted }}>{label}{required&&<span style={{ color:C.coral }}> *</span>}</label>
       {options
-        ? <select value={value} onChange={e=>onChange(e.target.value)} style={base}><option value="">— Select —</option>{options.map(o=><option key={o} value={o}>{o}</option>)}</select>
-        : type==="textarea"
-        ? <textarea value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder} rows={3} style={{ ...base, resize:"vertical" }}/>
-        : <input type={type} value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder} style={base}/>
+        ?<select value={value} onChange={e=>onChange(e.target.value)} style={base}><option value="">— Select —</option>{options.map(o=><option key={o} value={o}>{o}</option>)}</select>
+        :type==="textarea"
+        ?<textarea value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder} rows={3} style={{ ...base, resize:"vertical" }}/>
+        :<input type={type} value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder} style={base}/>
       }
     </div>
   );
@@ -124,35 +85,26 @@ function Sec({ title, children }) {
 }
 
 function PhotoUpload({ photos, onChange }) {
-  const fileRef = useRef();
-  const handleFiles = (e) => {
-    Array.from(e.target.files).forEach(file => {
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        onChange(prev=>[...prev,{ id:Date.now()+Math.random(), url:ev.target.result, name:file.name, remark:"", type:"site_visit" }]);
-      };
-      reader.readAsDataURL(file);
-    });
-    e.target.value="";
-  };
+  const fileRef=useRef();
+  const handleFiles=(e)=>{ Array.from(e.target.files).forEach(file=>{ const reader=new FileReader(); reader.onload=(ev)=>{ onChange(prev=>[...prev,{ id:Date.now()+Math.random(), url:ev.target.result, name:file.name, remark:"", type:"site_visit" }]); }; reader.readAsDataURL(file); }); e.target.value=""; };
   const TYPES=["site_visit","measurement","installation","completion","reference"];
   return (
     <div style={{ width:"100%" }}>
       <input ref={fileRef} type="file" accept="image/*" multiple onChange={handleFiles} style={{ display:"none" }}/>
       <button type="button" onClick={()=>fileRef.current.click()} style={{ background:C.navy, color:"#fff", border:"none", borderRadius:10, padding:"11px 22px", fontSize:13, fontWeight:700, cursor:"pointer", marginBottom:14 }}>📷 Upload Photos</button>
-      {photos.length===0&&<div style={{ border:"2px dashed #E2E8F0", borderRadius:12, padding:"28px 20px", textAlign:"center", color:C.muted, fontSize:13 }}>No photos yet. Tap above to add site photos.</div>}
-      <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(180px,1fr))", gap:12 }}>
+      {photos.length===0&&<div style={{ border:"2px dashed #E2E8F0", borderRadius:12, padding:"24px", textAlign:"center", color:C.muted, fontSize:13 }}>No photos yet. Tap above to add site photos.</div>}
+      <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))", gap:12 }}>
         {photos.map(p=>(
           <div key={p.id} style={{ background:"#fff", borderRadius:12, overflow:"hidden", boxShadow:"0 2px 8px rgba(0,0,0,.08)", border:"1px solid #E2E8F0" }}>
             <div style={{ position:"relative" }}>
-              <img src={p.url} alt={p.name} style={{ width:"100%", height:140, objectFit:"cover", display:"block" }}/>
-              <button type="button" onClick={()=>onChange(prev=>prev.filter(x=>x.id!==p.id))} style={{ position:"absolute", top:6, right:6, background:"rgba(255,60,60,.85)", color:"#fff", border:"none", borderRadius:"50%", width:26, height:26, cursor:"pointer", fontWeight:700, fontSize:13 }}>✕</button>
-              <select value={p.type} onChange={e=>onChange(prev=>prev.map(x=>x.id===p.id?{...x,type:e.target.value}:x))} style={{ position:"absolute", bottom:6, left:6, fontSize:10, padding:"2px 6px", borderRadius:5, border:"none", background:"rgba(26,39,68,.8)", color:"#fff", cursor:"pointer" }}>
+              <img src={p.url} alt={p.name} style={{ width:"100%", height:130, objectFit:"cover", display:"block" }}/>
+              <button type="button" onClick={()=>onChange(prev=>prev.filter(x=>x.id!==p.id))} style={{ position:"absolute", top:6, right:6, background:"rgba(255,60,60,.85)", color:"#fff", border:"none", borderRadius:"50%", width:26, height:26, cursor:"pointer", fontWeight:700 }}>✕</button>
+              <select value={p.type} onChange={e=>onChange(prev=>prev.map(x=>x.id===p.id?{...x,type:e.target.value}:x))} style={{ position:"absolute", bottom:6, left:6, fontSize:10, padding:"2px 6px", borderRadius:5, border:"none", background:"rgba(26,39,68,.8)", color:"#fff" }}>
                 {TYPES.map(t=><option key={t} value={t}>{t.replace("_"," ")}</option>)}
               </select>
             </div>
-            <div style={{ padding:"10px 12px" }}>
-              <div style={{ fontSize:10, color:C.muted, marginBottom:5, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{p.name}</div>
+            <div style={{ padding:"8px 10px" }}>
+              <div style={{ fontSize:10, color:C.muted, marginBottom:4, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{p.name}</div>
               <textarea placeholder="Add remark..." value={p.remark} onChange={e=>onChange(prev=>prev.map(x=>x.id===p.id?{...x,remark:e.target.value}:x))} rows={2} style={{ width:"100%", border:"1.5px solid #E2E8F0", borderRadius:7, padding:"6px 9px", fontSize:12, resize:"none", fontFamily:"inherit", boxSizing:"border-box" }}/>
             </div>
           </div>
@@ -164,24 +116,36 @@ function PhotoUpload({ photos, onChange }) {
 
 const BLANK={ leadType:"", source:"", refBy:"", clientName:"", contact:"", email:"", city:"", projectName:"", projectType:"", address:"", siteCity:"", floors:"", estRft:"", budgetRange:"", projectStage:"", urgency:"", material:"", productType:"", railingType:"", mountingType:"", finish:"", glassSpec:"", architect:"", archContact:"", assignTo:"", siteVisit:"", measurements:"", quotationStatus:"Not Sent", amount:"", lastQuotDate:"", lastFollowup:"", nextFollowup:"", notes:"", status:"New", finalDeal:"", expectedClosure:"", lostReason:"", jmsDone:"", finalRft:"", productionStatus:"", installationStatus:"", billingStatus:"", photos:[] };
 
-function NewLeadForm({ leads, onSave, onCancel }) {
-  const [f, setF] = useState({ ...BLANK });
-  const nextId = leads.length+1;
-  const leadId = `LD/SV/26-27/${String(nextId).padStart(4,"0")}`;
-  const today = new Date().toLocaleDateString("en-IN",{ day:"2-digit", month:"2-digit", year:"numeric" }).replace(/\//g,".");
-  const set = k => v => setF(p=>({ ...p, [k]:v }));
-  const handleSubmit = (e) => {
+function NewLeadForm({ leads, onSave, onCancel, currentUser }) {
+  const [f,setF]=useState({ ...BLANK, assignTo:currentUser });
+  const [saving,setSaving]=useState(false);
+  const nextId=leads.length+1;
+  const leadId=`LD/SV/26-27/${String(nextId).padStart(4,"0")}`;
+  const today=new Date().toLocaleDateString("en-IN",{ day:"2-digit", month:"2-digit", year:"numeric" }).replace(/\//g,".");
+  const set=k=>v=>setF(p=>({ ...p, [k]:v }));
+
+  const handleSubmit=async(e)=>{
     e.preventDefault();
     if(!f.clientName||!f.leadType||!f.source||!f.city||!f.assignTo){ alert("Fill required fields (*)"); return; }
-    onSave({ ...f, id:nextId, leadId, entryDate:today });
+    setSaving(true);
+    const lead={ ...f, id:nextId, leadId, entryDate:today, submittedBy:currentUser, photos:[] };
+    try {
+      await fetch(SCRIPT_URL, {
+        method:"POST",
+        body:JSON.stringify(lead),
+      });
+    } catch(err) { console.log("Sheet save error", err); }
+    onSave(lead);
+    setSaving(false);
   };
-  const card = { background:"#fff", borderRadius:14, padding:"20px 18px", marginBottom:12, boxShadow:"0 2px 10px rgba(26,39,68,.06)" };
+
+  const card={ background:"#fff", borderRadius:14, padding:"20px 18px", marginBottom:12, boxShadow:"0 2px 10px rgba(26,39,68,.06)" };
   return (
     <div style={{ maxWidth:860, margin:"0 auto", paddingBottom:60 }}>
       <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:24, flexWrap:"wrap", gap:10 }}>
         <div>
           <h2 style={{ margin:0, fontSize:20, color:C.navy, fontWeight:800 }}>New Inquiry</h2>
-          <div style={{ color:C.muted, fontSize:12, marginTop:3 }}>Lead ID: <b>{leadId}</b> · {today}</div>
+          <div style={{ color:C.muted, fontSize:12, marginTop:3 }}>Lead ID: <b>{leadId}</b> · {today} · <b style={{ color:C.teal }}>{currentUser}</b></div>
         </div>
         <button onClick={onCancel} style={{ background:"#F1F5F9", color:C.navy, border:"none", borderRadius:10, padding:"9px 18px", cursor:"pointer", fontWeight:600 }}>✕ Cancel</button>
       </div>
@@ -197,8 +161,10 @@ function NewLeadForm({ leads, onSave, onCancel }) {
         <div style={card}><Sec title="Follow-up"><Input label="Last Follow-Up" type="date" value={f.lastFollowup} onChange={set("lastFollowup")} half/><Input label="Next Follow-Up" type="date" value={f.nextFollowup} onChange={set("nextFollowup")} half/><Input label="Notes" type="textarea" value={f.notes} onChange={set("notes")} placeholder="Conversation notes..."/></Sec></div>
         <div style={card}><Sec title="Closure"><Input label="Final Deal (₹)" type="number" value={f.finalDeal} onChange={set("finalDeal")} placeholder="Confirmed value" half/><Input label="Expected Closure" type="date" value={f.expectedClosure} onChange={set("expectedClosure")} half/>{f.status==="Lost"&&<Input label="Lost Reason" type="textarea" value={f.lostReason} onChange={set("lostReason")} placeholder="Why lost?"/>}</Sec></div>
         <div style={card}><Sec title="Execution"><Input label="JMS Done Date" type="date" value={f.jmsDone} onChange={set("jmsDone")} half/><Input label="Final RFT" type="number" value={f.finalRft} onChange={set("finalRft")} placeholder="Final RFT" half/><Input label="Production Status" options={PROD_STATUSES} value={f.productionStatus} onChange={set("productionStatus")} half/><Input label="Installation Status" options={INSTALL_STATUSES} value={f.installationStatus} onChange={set("installationStatus")} half/><Input label="Billing Status" options={BILLING_STATUSES} value={f.billingStatus} onChange={set("billingStatus")} half/></Sec></div>
-        <div style={card}><Sec title="Site Photos with Remarks"><PhotoUpload photos={f.photos} onChange={updater=>setF(p=>({ ...p, photos:typeof updater==="function"?updater(p.photos):updater }))}/></Sec></div>
-        <button type="submit" style={{ width:"100%", background:C.navy, color:"#fff", border:"none", borderRadius:14, padding:"16px 0", fontSize:16, fontWeight:800, cursor:"pointer", marginTop:4 }}>✅ Save Inquiry — {leadId}</button>
+        <div style={card}><Sec title="Site Photos"><PhotoUpload photos={f.photos} onChange={updater=>setF(p=>({ ...p, photos:typeof updater==="function"?updater(p.photos):updater }))}/></Sec></div>
+        <button type="submit" disabled={saving} style={{ width:"100%", background:saving?"#7A85A3":C.navy, color:"#fff", border:"none", borderRadius:14, padding:"16px 0", fontSize:16, fontWeight:800, cursor:saving?"not-allowed":"pointer" }}>
+          {saving?"⏳ Saving to Google Sheet...":"✅ Save Inquiry — "+leadId}
+        </button>
       </form>
     </div>
   );
@@ -211,111 +177,145 @@ function LeadModal({ lead, onClose }) {
     <div style={{ position:"fixed", inset:0, background:"rgba(10,20,50,.55)", zIndex:999, display:"flex", alignItems:"flex-start", justifyContent:"flex-end" }} onClick={onClose}>
       <div style={{ background:"#fff", width:440, maxWidth:"100vw", height:"100vh", overflowY:"auto", padding:24, boxShadow:"-8px 0 40px rgba(0,0,0,.15)" }} onClick={e=>e.stopPropagation()}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:18 }}>
-          <div><div style={{ fontSize:11, color:C.teal, fontWeight:700 }}>{lead.leadId}</div><div style={{ fontSize:17, fontWeight:800, color:C.navy, margin:"3px 0" }}>{lead.clientName}</div><Badge status={lead.status}/></div>
+          <div><div style={{ fontSize:11, color:C.teal, fontWeight:700 }}>{lead["Lead ID"]||lead.leadId}</div><div style={{ fontSize:17, fontWeight:800, color:C.navy, margin:"3px 0" }}>{lead["Client Name"]||lead.clientName}</div><Badge status={lead["Status"]||lead.status}/></div>
           <button onClick={onClose} style={{ background:"#F1F5F9", border:"none", borderRadius:8, padding:"7px 13px", cursor:"pointer", fontWeight:700 }}>✕</button>
         </div>
-        <Row label="Lead Type" val={lead.leadType}/><Row label="Source" val={lead.source}/><Row label="Contact" val={lead.contact}/><Row label="City" val={lead.city}/><Row label="Project Type" val={lead.projectType}/><Row label="Floors" val={lead.floors}/><Row label="Est. RFT" val={lead.estRft}/><Row label="Material" val={lead.material}/><Row label="Product Type" val={lead.productType}/><Row label="Mounting" val={lead.mountingType}/><Row label="Finish" val={lead.finish}/><Row label="Architect" val={lead.architect}/><Row label="Assigned To" val={lead.assignTo}/><Row label="Quotation" val={lead.quotationStatus}/><Row label="Amount" val={fmt(lead.amount)}/><Row label="Final Deal" val={fmt(lead.finalDeal)}/><Row label="Production" val={lead.productionStatus}/><Row label="Installation" val={lead.installationStatus}/><Row label="Billing" val={lead.billingStatus}/><Row label="Notes" val={lead.notes}/><Row label="Lost Reason" val={lead.lostReason}/>
-        {lead.photos?.length>0&&<div style={{ marginTop:18 }}><div style={{ fontSize:13, fontWeight:700, color:C.navy, marginBottom:10 }}>📷 Photos ({lead.photos.length})</div><div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8 }}>{lead.photos.map(p=><div key={p.id} style={{ borderRadius:9, overflow:"hidden", border:"1px solid #E2E8F0" }}><img src={p.url} alt={p.name} style={{ width:"100%", height:100, objectFit:"cover", display:"block" }}/>{p.remark&&<div style={{ padding:"5px 8px", fontSize:11, color:C.muted }}>{p.remark}</div>}<div style={{ padding:"0 8px 6px", fontSize:10, color:C.teal, fontWeight:700, textTransform:"uppercase" }}>{p.type?.replace("_"," ")}</div></div>)}</div></div>}
+        <Row label="Lead Type" val={lead["Lead Type"]||lead.leadType}/>
+        <Row label="Source" val={lead["Source"]||lead.source}/>
+        <Row label="Contact" val={lead["Contact"]||lead.contact}/>
+        <Row label="City" val={lead["City"]||lead.city}/>
+        <Row label="Project Type" val={lead["Project Type"]||lead.projectType}/>
+        <Row label="Floors" val={lead["Floors"]||lead.floors}/>
+        <Row label="Material" val={lead["Material"]||lead.material}/>
+        <Row label="Product Type" val={lead["Product Type"]||lead.productType}/>
+        <Row label="Mounting" val={lead["Mounting Type"]||lead.mountingType}/>
+        <Row label="Finish" val={lead["Finish"]||lead.finish}/>
+        <Row label="Assigned To" val={lead["Assign To"]||lead.assignTo}/>
+        <Row label="Submitted By" val={lead["Submitted By"]||lead.submittedBy}/>
+        <Row label="Quotation" val={lead["Quotation Status"]||lead.quotationStatus}/>
+        <Row label="Amount" val={fmt(lead["Amount"]||lead.amount)}/>
+        <Row label="Final Deal" val={fmt(lead["Final Deal"]||lead.finalDeal)}/>
+        <Row label="Status" val={lead["Status"]||lead.status}/>
+        <Row label="Notes" val={lead["Notes"]||lead.notes}/>
+        <Row label="Lost Reason" val={lead["Lost Reason"]||lead.lostReason}/>
+        <Row label="Submitted At" val={lead["Submitted At"]}/>
       </div>
     </div>
   );
 }
 
 function Dashboard({ leads }) {
-  const isMobile = useIsMobile();
-  const won=leads.filter(l=>l.status==="Won");
-  const lost=leads.filter(l=>l.status==="Lost");
-  const pipeline=leads.reduce((s,l)=>s+(Number(l.amount)||0),0);
-  const wonVal=won.reduce((s,l)=>s+(Number(l.finalDeal)||0),0);
+  const isMobile=useIsMobile();
+  const won=leads.filter(l=>(l["Status"]||l.status)==="Won");
+  const lost=leads.filter(l=>(l["Status"]||l.status)==="Lost");
+  const getAmt=l=>Number(l["Amount"]||l.amount)||0;
+  const getFinal=l=>Number(l["Final Deal"]||l.finalDeal)||0;
+  const pipeline=leads.reduce((s,l)=>s+getAmt(l),0);
+  const wonVal=won.reduce((s,l)=>s+getFinal(l),0);
+  const getStatus=l=>l["Status"]||l.status||"";
   const statusCounts={};
-  STATUSES.forEach(s=>{ statusCounts[s]=leads.filter(l=>l.status===s).length; });
+  STATUSES.forEach(s=>{ statusCounts[s]=leads.filter(l=>getStatus(l)===s).length; });
   const maxCount=Math.max(...Object.values(statusCounts),1);
-  const sourceCounts={};
-  SOURCES.forEach(s=>{ sourceCounts[s]=leads.filter(l=>l.source===s).length; });
+  const getAssign=l=>l["Assign To"]||l.assignTo||"";
+  const sbLeads=leads.filter(l=>getAssign(l)==="Siddharth Bhatt");
+  const vvLeads=leads.filter(l=>getAssign(l)==="Viraj Vadodariya");
   return (
     <div>
-      <div style={{ display:"grid", gridTemplateColumns:`repeat(auto-fit,minmax(130px,1fr))`, gap:12, marginBottom:20 }}>
+      <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(130px,1fr))", gap:12, marginBottom:20 }}>
         <KpiCard label="Total Leads" value={leads.length} color={C.navy}/>
-        <KpiCard label="Active" value={leads.filter(l=>!["Won","Lost"].includes(l.status)).length} color={C.teal}/>
+        <KpiCard label="Active" value={leads.filter(l=>!["Won","Lost"].includes(getStatus(l))).length} color={C.teal}/>
         <KpiCard label="Pipeline" value={`₹${(pipeline/100000).toFixed(1)}L`} color="#6366F1"/>
         <KpiCard label="Won Value" value={`₹${(wonVal/100000).toFixed(1)}L`} color="#10B981"/>
         <KpiCard label="Conversion" value={pct(won.length,leads.length)} color={C.gold}/>
         <KpiCard label="Won/Lost" value={`${won.length}/${lost.length}`} color={C.coral}/>
       </div>
-      <div style={{ display:"grid", gridTemplateColumns:isMobile?"1fr":"1fr 280px", gap:14 }}>
-        <div style={{ background:"#fff", borderRadius:14, padding:20, boxShadow:"0 2px 12px rgba(26,39,68,.07)" }}>
-          <div style={{ fontWeight:700, color:C.navy, marginBottom:16, fontSize:14 }}>📊 Status Funnel</div>
-          {STATUSES.map(s=>{
-            const count=statusCounts[s]||0;
-            const c=STATUS_COLORS[s]||{ bg:"#E2E8F0", text:"#475569" };
-            return <div key={s} style={{ display:"flex", alignItems:"center", gap:8, marginBottom:9 }}>
-              <div style={{ width:isMobile?90:130, fontSize:11, color:C.muted, fontWeight:600, textAlign:"right", flexShrink:0 }}>{s}</div>
-              <div style={{ flex:1, background:"#F1F5F9", borderRadius:5, height:20, position:"relative", overflow:"hidden" }}>
-                <div style={{ position:"absolute", left:0, top:0, bottom:0, width:`${(count/maxCount)*100}%`, background:c.bg, borderRadius:5 }}/>
-              </div>
-              <div style={{ width:20, fontSize:12, fontWeight:800, color:c.text }}>{count}</div>
-            </div>;
-          })}
-        </div>
-        {!isMobile&&<div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <div style={{ background:"#fff", borderRadius:14, padding:18, boxShadow:"0 2px 12px rgba(26,39,68,.07)" }}>
-            <div style={{ fontWeight:700, color:C.navy, marginBottom:12, fontSize:14 }}>🗂 Source Mix</div>
-            {Object.entries(sourceCounts).map(([s,c])=><div key={s} style={{ display:"flex", justifyContent:"space-between", padding:"5px 0", borderBottom:"1px solid #E2E8F0" }}><span style={{ fontSize:12, color:C.muted }}>{s}</span><span style={{ fontSize:13, fontWeight:800, color:C.navy }}>{c}</span></div>)}
+
+      {/* Partner stats */}
+      <div style={{ display:"grid", gridTemplateColumns:isMobile?"1fr":"1fr 1fr", gap:12, marginBottom:16 }}>
+        {[{ name:"Siddharth Bhatt", data:sbLeads, color:"#6366F1" },{ name:"Viraj Vadodariya", data:vvLeads, color:C.teal }].map(p=>(
+          <div key={p.name} style={{ background:"#fff", borderRadius:14, padding:"16px 20px", boxShadow:"0 2px 10px rgba(26,39,68,.07)", borderLeft:`4px solid ${p.color}` }}>
+            <div style={{ fontWeight:700, color:C.navy, marginBottom:10 }}>👤 {p.name}</div>
+            <div style={{ display:"flex", gap:20 }}>
+              <div><div style={{ fontSize:11, color:C.muted }}>Leads</div><div style={{ fontSize:20, fontWeight:800, color:C.navy }}>{p.data.length}</div></div>
+              <div><div style={{ fontSize:11, color:C.muted }}>Won</div><div style={{ fontSize:20, fontWeight:800, color:"#10B981" }}>{p.data.filter(l=>getStatus(l)==="Won").length}</div></div>
+              <div><div style={{ fontSize:11, color:C.muted }}>Pipeline</div><div style={{ fontSize:20, fontWeight:800, color:p.color }}>₹{(p.data.reduce((s,l)=>s+getAmt(l),0)/100000).toFixed(1)}L</div></div>
+            </div>
           </div>
-          <div style={{ background:"#fff", borderRadius:14, padding:18, boxShadow:"0 2px 12px rgba(26,39,68,.07)" }}>
-            <div style={{ fontWeight:700, color:C.navy, marginBottom:12, fontSize:14 }}>🏙 Top Cities</div>
-            {Object.entries(leads.reduce((acc,l)=>{ if(l.city) acc[l.city]=(acc[l.city]||0)+1; return acc; },{})).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([city,count])=><div key={city} style={{ display:"flex", justifyContent:"space-between", padding:"5px 0", borderBottom:"1px solid #E2E8F0" }}><span style={{ fontSize:12, color:C.muted }}>{city}</span><span style={{ fontSize:13, fontWeight:800, color:C.navy }}>{count}</span></div>)}
-          </div>
-        </div>}
+        ))}
+      </div>
+
+      <div style={{ background:"#fff", borderRadius:14, padding:20, boxShadow:"0 2px 12px rgba(26,39,68,.07)" }}>
+        <div style={{ fontWeight:700, color:C.navy, marginBottom:16, fontSize:14 }}>📊 Status Funnel</div>
+        {STATUSES.map(s=>{
+          const count=statusCounts[s]||0;
+          const c=STATUS_COLORS[s]||{ bg:"#E2E8F0", text:"#475569" };
+          return <div key={s} style={{ display:"flex", alignItems:"center", gap:8, marginBottom:9 }}>
+            <div style={{ width:isMobile?90:140, fontSize:11, color:C.muted, fontWeight:600, textAlign:"right", flexShrink:0 }}>{s}</div>
+            <div style={{ flex:1, background:"#F1F5F9", borderRadius:5, height:20, position:"relative", overflow:"hidden" }}>
+              <div style={{ position:"absolute", left:0, top:0, bottom:0, width:`${(count/maxCount)*100}%`, background:c.bg, borderRadius:5 }}/>
+            </div>
+            <div style={{ width:20, fontSize:12, fontWeight:800, color:c.text }}>{count}</div>
+          </div>;
+        })}
       </div>
     </div>
   );
 }
 
 function LeadsList({ leads, onSelect }) {
-  const isMobile = useIsMobile();
-  const [search, setSearch] = useState("");
-  const [filterStatus, setFilterStatus] = useState("");
-  const [filterSource, setFilterSource] = useState("");
-  const [page, setPage] = useState(1);
+  const isMobile=useIsMobile();
+  const [search,setSearch]=useState("");
+  const [filterStatus,setFilterStatus]=useState("");
+  const [filterAssign,setFilterAssign]=useState("");
+  const [page,setPage]=useState(1);
   const PER=10;
+  const getVal=(l,sheet,local)=>l[sheet]||l[local]||"";
   const filtered=leads.filter(l=>{
     const q=search.toLowerCase();
-    return(!q||l.clientName?.toLowerCase().includes(q)||l.leadId?.toLowerCase().includes(q)||l.city?.toLowerCase().includes(q)||l.contact?.includes(q))&&(!filterStatus||l.status===filterStatus)&&(!filterSource||l.source===filterSource);
+    const name=getVal(l,"Client Name","clientName").toLowerCase();
+    const id=getVal(l,"Lead ID","leadId").toLowerCase();
+    const city=getVal(l,"City","city").toLowerCase();
+    const contact=getVal(l,"Contact","contact");
+    const status=getVal(l,"Status","status");
+    const assign=getVal(l,"Assign To","assignTo");
+    return(!q||name.includes(q)||id.includes(q)||city.includes(q)||contact.includes(q))&&(!filterStatus||status===filterStatus)&&(!filterAssign||assign===filterAssign);
   });
   const pages=Math.ceil(filtered.length/PER);
   const visible=filtered.slice((page-1)*PER,page*PER);
-  const exportCSV=()=>{ const cols=["Lead ID","Client","Contact","City","Type","Source","Status","Amount","Assign To"]; const rows=filtered.map(l=>[l.leadId,l.clientName,l.contact,l.city,l.leadType,l.source,l.status,l.amount||"",l.assignTo]); const csv=[cols,...rows].map(r=>r.join(",")).join("\n"); const a=document.createElement("a"); a.href="data:text/csv,"+encodeURIComponent(csv); a.download="sv_leads.csv"; a.click(); };
 
   if(isMobile) return (
     <div>
       <input placeholder="🔍 Search client, ID, city..." value={search} onChange={e=>{setSearch(e.target.value);setPage(1);}} style={{ width:"100%", padding:"11px 14px", borderRadius:10, border:"1.5px solid #E2E8F0", fontSize:14, marginBottom:10, boxSizing:"border-box" }}/>
-      <div style={{ display:"flex", gap:8, marginBottom:12 }}>
+      <div style={{ display:"flex", gap:8, marginBottom:10 }}>
         <select value={filterStatus} onChange={e=>{setFilterStatus(e.target.value);setPage(1);}} style={{ flex:1, padding:"9px 10px", borderRadius:9, border:"1.5px solid #E2E8F0", fontSize:12 }}><option value="">All Status</option>{STATUSES.map(s=><option key={s}>{s}</option>)}</select>
-        <button onClick={exportCSV} style={{ background:C.navy, color:"#fff", border:"none", borderRadius:9, padding:"9px 14px", fontSize:12, fontWeight:700, cursor:"pointer" }}>⬇ CSV</button>
+        <select value={filterAssign} onChange={e=>{setFilterAssign(e.target.value);setPage(1);}} style={{ flex:1, padding:"9px 10px", borderRadius:9, border:"1.5px solid #E2E8F0", fontSize:12 }}><option value="">All Staff</option>{ASSIGN_TO.map(s=><option key={s}>{s}</option>)}</select>
       </div>
       <div style={{ fontSize:12, color:C.muted, marginBottom:8 }}>{filtered.length} leads</div>
       <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
-        {visible.map(l=>(
-          <div key={l.id} onClick={()=>onSelect(l)} style={{ background:"#fff", borderRadius:13, padding:"14px 16px", boxShadow:"0 2px 8px rgba(26,39,68,.07)", cursor:"pointer" }}>
-            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start" }}>
-              <div>
-                <div style={{ fontSize:10, color:C.teal, fontWeight:700, fontFamily:"monospace" }}>{l.leadId}</div>
-                <div style={{ fontSize:15, fontWeight:800, color:C.navy, margin:"2px 0" }}>{l.clientName||"—"}</div>
-                <div style={{ fontSize:12, color:C.muted }}>{l.city} · {l.contact}</div>
+        {visible.map((l,i)=>{
+          const name=getVal(l,"Client Name","clientName");
+          const id=getVal(l,"Lead ID","leadId");
+          const city=getVal(l,"City","city");
+          const contact=getVal(l,"Contact","contact");
+          const status=getVal(l,"Status","status");
+          const type=getVal(l,"Lead Type","leadType");
+          const amount=getVal(l,"Amount","amount");
+          return (
+            <div key={i} onClick={()=>onSelect(l)} style={{ background:"#fff", borderRadius:13, padding:"14px 16px", boxShadow:"0 2px 8px rgba(26,39,68,.07)", cursor:"pointer" }}>
+              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start" }}>
+                <div><div style={{ fontSize:10, color:C.teal, fontWeight:700, fontFamily:"monospace" }}>{id}</div><div style={{ fontSize:15, fontWeight:800, color:C.navy, margin:"2px 0" }}>{name||"—"}</div><div style={{ fontSize:12, color:C.muted }}>{city} · {contact}</div></div>
+                <Badge status={status}/>
               </div>
-              <Badge status={l.status}/>
+              <div style={{ display:"flex", justifyContent:"space-between", marginTop:10, alignItems:"center" }}>
+                <span style={{ background:type==="Project"?"#DBEAFE":"#FEF9C3", color:type==="Project"?"#1E40AF":"#854D0E", padding:"2px 8px", borderRadius:6, fontSize:11, fontWeight:700 }}>{type||"—"}</span>
+                <span style={{ fontSize:13, fontWeight:800, color:C.navy }}>{amount?fmt(amount):"—"}</span>
+              </div>
             </div>
-            <div style={{ display:"flex", justifyContent:"space-between", marginTop:10, alignItems:"center" }}>
-              <span style={{ background:l.leadType==="Project"?"#DBEAFE":"#FEF9C3", color:l.leadType==="Project"?"#1E40AF":"#854D0E", padding:"2px 8px", borderRadius:6, fontSize:11, fontWeight:700 }}>{l.leadType||"—"}</span>
-              <span style={{ fontSize:13, fontWeight:800, color:C.navy }}>{l.amount?fmt(l.amount):"—"}</span>
-              {l.photos?.length>0&&<span style={{ fontSize:12, color:C.teal, fontWeight:700 }}>📷{l.photos.length}</span>}
-            </div>
-          </div>
-        ))}
+          );
+        })}
         {visible.length===0&&<div style={{ padding:40, textAlign:"center", color:C.muted, background:"#fff", borderRadius:13 }}>No leads found.</div>}
       </div>
-      {pages>1&&<div style={{ display:"flex", justifyContent:"center", gap:8, padding:"16px 0" }}>
+      {pages>1&&<div style={{ display:"flex", justifyContent:"center", gap:8, padding:"14px 0" }}>
         <button onClick={()=>setPage(p=>Math.max(1,p-1))} disabled={page===1} style={{ padding:"8px 16px", borderRadius:8, border:"1px solid #E2E8F0", cursor:"pointer", background:"#fff", fontWeight:600 }}>‹</button>
         <span style={{ padding:"8px 12px", fontSize:13, color:C.muted }}>{page}/{pages}</span>
         <button onClick={()=>setPage(p=>Math.min(pages,p+1))} disabled={page===pages} style={{ padding:"8px 16px", borderRadius:8, border:"1px solid #E2E8F0", cursor:"pointer", background:"#fff", fontWeight:600 }}>›</button>
@@ -326,31 +326,39 @@ function LeadsList({ leads, onSelect }) {
   return (
     <div>
       <div style={{ display:"flex", flexWrap:"wrap", gap:10, marginBottom:14 }}>
-        <input placeholder="🔍 Search client, ID, city, phone..." value={search} onChange={e=>{setSearch(e.target.value);setPage(1);}} style={{ flex:"1 1 220px", padding:"10px 14px", borderRadius:10, border:"1.5px solid #E2E8F0", fontSize:13 }}/>
+        <input placeholder="🔍 Search..." value={search} onChange={e=>{setSearch(e.target.value);setPage(1);}} style={{ flex:"1 1 200px", padding:"10px 14px", borderRadius:10, border:"1.5px solid #E2E8F0", fontSize:13 }}/>
         <select value={filterStatus} onChange={e=>{setFilterStatus(e.target.value);setPage(1);}} style={{ padding:"10px 12px", borderRadius:10, border:"1.5px solid #E2E8F0", fontSize:13 }}><option value="">All Status</option>{STATUSES.map(s=><option key={s}>{s}</option>)}</select>
-        <select value={filterSource} onChange={e=>{setFilterSource(e.target.value);setPage(1);}} style={{ padding:"10px 12px", borderRadius:10, border:"1.5px solid #E2E8F0", fontSize:13 }}><option value="">All Sources</option>{SOURCES.map(s=><option key={s}>{s}</option>)}</select>
-        <button onClick={exportCSV} style={{ background:C.navy, color:"#fff", border:"none", borderRadius:10, padding:"10px 18px", fontSize:13, fontWeight:700, cursor:"pointer" }}>⬇ Export CSV</button>
+        <select value={filterAssign} onChange={e=>{setFilterAssign(e.target.value);setPage(1);}} style={{ padding:"10px 12px", borderRadius:10, border:"1.5px solid #E2E8F0", fontSize:13 }}><option value="">All Staff</option>{ASSIGN_TO.map(s=><option key={s}>{s}</option>)}</select>
       </div>
       <div style={{ fontSize:12, color:C.muted, marginBottom:8 }}>{filtered.length} leads</div>
       <div style={{ background:"#fff", borderRadius:14, overflow:"hidden", boxShadow:"0 2px 12px rgba(26,39,68,.07)" }}>
         <div style={{ overflowX:"auto" }}>
           <table style={{ width:"100%", borderCollapse:"collapse", fontSize:13 }}>
-            <thead><tr style={{ background:C.navy, color:"#fff" }}>{["Lead ID","Client","Contact","City","Type","Amount","Status","Assigned","📷"].map(h=><th key={h} style={{ padding:"11px 13px", textAlign:"left", fontWeight:700, fontSize:11, whiteSpace:"nowrap" }}>{h}</th>)}</tr></thead>
+            <thead><tr style={{ background:C.navy, color:"#fff" }}>{["Lead ID","Client","Contact","City","Type","Amount","Status","Assigned By"].map(h=><th key={h} style={{ padding:"11px 13px", textAlign:"left", fontWeight:700, fontSize:11, whiteSpace:"nowrap" }}>{h}</th>)}</tr></thead>
             <tbody>
-              {visible.map((l,i)=>(
-                <tr key={l.id} onClick={()=>onSelect(l)} style={{ background:i%2?"#FAFBFE":"#fff", cursor:"pointer" }} onMouseEnter={e=>e.currentTarget.style.background="#EEF2FF"} onMouseLeave={e=>e.currentTarget.style.background=i%2?"#FAFBFE":"#fff"}>
-                  <td style={{ padding:"10px 13px", color:C.teal, fontWeight:700, fontFamily:"monospace", fontSize:11, whiteSpace:"nowrap" }}>{l.leadId}</td>
-                  <td style={{ padding:"10px 13px", fontWeight:600, color:C.navy }}>{l.clientName||"—"}</td>
-                  <td style={{ padding:"10px 13px", color:C.muted }}>{l.contact||"—"}</td>
-                  <td style={{ padding:"10px 13px" }}>{l.city||"—"}</td>
-                  <td style={{ padding:"10px 13px" }}><span style={{ background:l.leadType==="Project"?"#DBEAFE":"#FEF9C3", color:l.leadType==="Project"?"#1E40AF":"#854D0E", padding:"2px 7px", borderRadius:5, fontSize:11, fontWeight:700 }}>{l.leadType||"—"}</span></td>
-                  <td style={{ padding:"10px 13px", fontWeight:700 }}>{l.amount?fmt(l.amount):"—"}</td>
-                  <td style={{ padding:"10px 13px" }}><Badge status={l.status}/></td>
-                  <td style={{ padding:"10px 13px" }}><span style={{ background:C.navy, color:"#fff", padding:"2px 8px", borderRadius:5, fontSize:11, fontWeight:700 }}>{l.assignTo||"—"}</span></td>
-                  <td style={{ padding:"10px 13px", color:l.photos?.length?C.teal:C.muted, fontWeight:700 }}>{l.photos?.length||"—"}</td>
-                </tr>
-              ))}
-              {visible.length===0&&<tr><td colSpan={9} style={{ padding:40, textAlign:"center", color:C.muted }}>No leads found.</td></tr>}
+              {visible.map((l,i)=>{
+                const name=getVal(l,"Client Name","clientName");
+                const id=getVal(l,"Lead ID","leadId");
+                const city=getVal(l,"City","city");
+                const contact=getVal(l,"Contact","contact");
+                const status=getVal(l,"Status","status");
+                const type=getVal(l,"Lead Type","leadType");
+                const amount=getVal(l,"Amount","amount");
+                const assign=getVal(l,"Assign To","assignTo");
+                return (
+                  <tr key={i} onClick={()=>onSelect(l)} style={{ background:i%2?"#FAFBFE":"#fff", cursor:"pointer" }} onMouseEnter={e=>e.currentTarget.style.background="#EEF2FF"} onMouseLeave={e=>e.currentTarget.style.background=i%2?"#FAFBFE":"#fff"}>
+                    <td style={{ padding:"10px 13px", color:C.teal, fontWeight:700, fontFamily:"monospace", fontSize:11 }}>{id}</td>
+                    <td style={{ padding:"10px 13px", fontWeight:600, color:C.navy }}>{name||"—"}</td>
+                    <td style={{ padding:"10px 13px", color:C.muted }}>{contact||"—"}</td>
+                    <td style={{ padding:"10px 13px" }}>{city||"—"}</td>
+                    <td style={{ padding:"10px 13px" }}><span style={{ background:type==="Project"?"#DBEAFE":"#FEF9C3", color:type==="Project"?"#1E40AF":"#854D0E", padding:"2px 7px", borderRadius:5, fontSize:11, fontWeight:700 }}>{type||"—"}</span></td>
+                    <td style={{ padding:"10px 13px", fontWeight:700 }}>{amount?fmt(amount):"—"}</td>
+                    <td style={{ padding:"10px 13px" }}><Badge status={status}/></td>
+                    <td style={{ padding:"10px 13px", fontSize:12, color:C.muted }}>{assign}</td>
+                  </tr>
+                );
+              })}
+              {visible.length===0&&<tr><td colSpan={8} style={{ padding:40, textAlign:"center", color:C.muted }}>No leads found.</td></tr>}
             </tbody>
           </table>
         </div>
@@ -364,45 +372,65 @@ function LeadsList({ leads, onSelect }) {
   );
 }
 
-function Followups({ leads }) {
-  const today=new Date();
-  const toDate=s=>{ try{ return s?new Date(s):null; }catch{ return null; } };
-  const overdue=leads.filter(l=>{ const d=toDate(l.nextFollowup); return d&&d<today&&!["Won","Lost"].includes(l.status); });
-  const dueToday=leads.filter(l=>{ const d=toDate(l.nextFollowup); return d&&d.toDateString()===today.toDateString(); });
-  const isMobile=useIsMobile();
-  const Card=({ lead, tag, tagColor })=>(
-    <div style={{ background:"#fff", borderRadius:12, padding:"13px 16px", boxShadow:"0 2px 8px rgba(26,39,68,.06)", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-      <div><div style={{ fontSize:10, color:C.teal, fontWeight:700 }}>{lead.leadId}</div><div style={{ fontSize:14, fontWeight:700, color:C.navy, margin:"2px 0" }}>{lead.clientName}</div><div style={{ fontSize:11, color:C.muted }}>{lead.city} · {lead.assignTo}</div></div>
-      <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-end", gap:5 }}><span style={{ background:tagColor, color:"#fff", fontSize:10, fontWeight:700, padding:"2px 9px", borderRadius:20 }}>{tag}</span><Badge status={lead.status}/></div>
-    </div>
-  );
+// ── Login Screen ───────────────────────────────────────────────
+function Login({ onLogin }) {
   return (
-    <div style={{ display:"grid", gridTemplateColumns:isMobile?"1fr":"1fr 1fr", gap:20 }}>
-      <div><div style={{ fontSize:14, fontWeight:800, color:C.coral, marginBottom:10 }}>🔴 Overdue ({overdue.length})</div><div style={{ display:"flex", flexDirection:"column", gap:9 }}>{overdue.length?overdue.map(l=><Card key={l.id} lead={l} tag="OVERDUE" tagColor={C.coral}/>):<div style={{ color:C.muted, fontSize:13, background:"#fff", borderRadius:12, padding:20, textAlign:"center" }}>No overdue 🎉</div>}</div></div>
-      <div><div style={{ fontSize:14, fontWeight:800, color:C.gold, marginBottom:10 }}>🟡 Due Today ({dueToday.length})</div><div style={{ display:"flex", flexDirection:"column", gap:9 }}>{dueToday.length?dueToday.map(l=><Card key={l.id} lead={l} tag="TODAY" tagColor={C.gold}/>):<div style={{ color:C.muted, fontSize:13, background:"#fff", borderRadius:12, padding:20, textAlign:"center" }}>None due today</div>}</div></div>
+    <div style={{ minHeight:"100vh", background:C.navy, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
+      <div style={{ background:"#fff", borderRadius:20, padding:"40px 32px", width:"100%", maxWidth:360, textAlign:"center", boxShadow:"0 20px 60px rgba(0,0,0,.3)" }}>
+        <div style={{ background:C.teal, color:C.navy, fontWeight:900, fontSize:18, padding:"8px 16px", borderRadius:10, display:"inline-block", marginBottom:16 }}>SV</div>
+        <h2 style={{ margin:"0 0 6px", fontSize:22, color:C.navy, fontWeight:800 }}>S&V Railing CRM</h2>
+        <p style={{ color:C.muted, fontSize:13, marginBottom:28 }}>Select your name to continue</p>
+        <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
+          {ASSIGN_TO.map(name=>(
+            <button key={name} onClick={()=>onLogin(name)} style={{ background:C.navy, color:"#fff", border:"none", borderRadius:12, padding:"16px 20px", fontSize:16, fontWeight:700, cursor:"pointer", transition:"background .2s" }}
+              onMouseEnter={e=>e.currentTarget.style.background=C.teal}
+              onMouseLeave={e=>e.currentTarget.style.background=C.navy}>
+              👤 {name}
+            </button>
+          ))}
+        </div>
+        <p style={{ color:C.muted, fontSize:11, marginTop:20 }}>S V Railing · Rajkot, Gujarat</p>
+      </div>
     </div>
   );
 }
 
 export default function App() {
-  const [leads, setLeads] = useState(loadLeads);
-  const [page, setPage] = useState("dashboard");
-  const [selectedLead, setSelectedLead] = useState(null);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const isMobile = useIsMobile();
+  const [currentUser,setCurrentUser]=useState(()=>localStorage.getItem("sv_user")||"");
+  const [leads,setLeads]=useState([]);
+  const [loading,setLoading]=useState(true);
+  const [page,setPage]=useState("dashboard");
+  const [selectedLead,setSelectedLead]=useState(null);
+  const [menuOpen,setMenuOpen]=useState(false);
+  const [lastRefresh,setLastRefresh]=useState(null);
+  const isMobile=useIsMobile();
 
-  // ── Save to localStorage whenever leads change ─────────────
-  useEffect(() => { saveLeads(leads); }, [leads]);
+  // ── Load leads from Google Sheet ───────────────────────────
+  const fetchLeads=async()=>{
+    setLoading(true);
+    try {
+      const res=await fetch(SCRIPT_URL);
+      const data=await res.json();
+      if(data.leads) setLeads(data.leads.reverse());
+      setLastRefresh(new Date().toLocaleTimeString("en-IN"));
+    } catch(e){ console.log("Fetch error",e); }
+    setLoading(false);
+  };
+
+  useEffect(()=>{ if(currentUser) fetchLeads(); else setLoading(false); },[currentUser]);
+
+  const handleLogin=(name)=>{ localStorage.setItem("sv_user",name); setCurrentUser(name); };
+  const handleLogout=()=>{ localStorage.removeItem("sv_user"); setCurrentUser(""); setPage("dashboard"); };
+  const handleSave=(lead)=>{ setLeads(prev=>[lead,...prev]); setPage("leads"); };
+  const goTo=(id)=>{ setPage(id); setMenuOpen(false); };
+
+  if(!currentUser) return <Login onLogin={handleLogin}/>;
 
   const navItems=[
     { id:"dashboard", label:"Dashboard", icon:"📊" },
     { id:"leads", label:"All Leads", icon:"📋" },
     { id:"new", label:"New Inquiry", icon:"➕" },
-    { id:"followups", label:"Follow-ups", icon:"📅" },
   ];
-
-  const handleSave=(lead)=>{ setLeads(prev=>[...prev,lead]); setPage("leads"); };
-  const goTo=(id)=>{ setPage(id); setMenuOpen(false); };
 
   return (
     <div style={{ minHeight:"100vh", background:C.bg, fontFamily:"'DM Sans','Segoe UI',sans-serif" }}>
@@ -410,14 +438,11 @@ export default function App() {
       <div style={{ background:C.navy, color:"#fff", padding:"0 16px", display:"flex", alignItems:"center", justifyContent:"space-between", height:54, position:"sticky", top:0, zIndex:100, boxShadow:"0 2px 16px rgba(0,0,0,.18)" }}>
         <div style={{ display:"flex", alignItems:"center", gap:10 }}>
           <div style={{ background:C.teal, color:C.navy, fontWeight:900, fontSize:12, padding:"4px 9px", borderRadius:7 }}>SV</div>
-          <div>
-            <div style={{ fontWeight:800, fontSize:14 }}>S&V Railing CRM</div>
-            {!isMobile&&<div style={{ fontSize:10, opacity:0.6 }}>RAJKOT · GUJARAT</div>}
-          </div>
+          {!isMobile&&<div><div style={{ fontWeight:800, fontSize:14 }}>S&V Railing CRM</div><div style={{ fontSize:10, opacity:0.6 }}>RAJKOT · GUJARAT</div></div>}
         </div>
-        {isMobile ? (
+        {isMobile?(
           <button onClick={()=>setMenuOpen(o=>!o)} style={{ background:"rgba(255,255,255,.1)", color:"#fff", border:"none", borderRadius:8, padding:"8px 12px", cursor:"pointer", fontSize:18 }}>☰</button>
-        ) : (
+        ):(
           <nav style={{ display:"flex", gap:4 }}>
             {navItems.map(n=>(
               <button key={n.id} onClick={()=>goTo(n.id)} style={{ background:page===n.id?"rgba(0,201,167,.15)":"transparent", color:page===n.id?C.teal:"rgba(255,255,255,.75)", border:page===n.id?"1px solid rgba(0,201,167,.35)":"1px solid transparent", borderRadius:8, padding:"7px 14px", cursor:"pointer", fontSize:13, fontWeight:700 }}>
@@ -426,12 +451,18 @@ export default function App() {
             ))}
           </nav>
         )}
-        <div style={{ fontSize:12, opacity:0.6 }}>{leads.length}</div>
+        <div style={{ display:"flex", alignItems:"center", gap:10 }}>
+          <div style={{ fontSize:11, opacity:0.7, textAlign:"right" }}>
+            <div style={{ color:C.teal, fontWeight:700 }}>{currentUser.split(" ")[0]}</div>
+            {lastRefresh&&!isMobile&&<div style={{ fontSize:10 }}>↻ {lastRefresh}</div>}
+          </div>
+          <button onClick={fetchLeads} style={{ background:"rgba(255,255,255,.1)", color:"#fff", border:"none", borderRadius:7, padding:"6px 10px", cursor:"pointer", fontSize:13 }}>↻</button>
+          <button onClick={handleLogout} style={{ background:"rgba(255,100,100,.2)", color:"#ffaaaa", border:"none", borderRadius:7, padding:"6px 10px", cursor:"pointer", fontSize:12, fontWeight:600 }}>Exit</button>
+        </div>
       </div>
 
-      {/* Mobile menu dropdown */}
       {isMobile&&menuOpen&&(
-        <div style={{ background:C.navyLight||"#1e3060", position:"sticky", top:54, zIndex:99, padding:"8px 12px", display:"flex", flexDirection:"column", gap:4 }}>
+        <div style={{ background:"#1e3060", position:"sticky", top:54, zIndex:99, padding:"8px 12px", display:"flex", flexDirection:"column", gap:4 }}>
           {navItems.map(n=>(
             <button key={n.id} onClick={()=>goTo(n.id)} style={{ background:page===n.id?"rgba(0,201,167,.15)":"transparent", color:page===n.id?C.teal:"rgba(255,255,255,.8)", border:"none", borderRadius:8, padding:"11px 14px", cursor:"pointer", fontSize:14, fontWeight:700, textAlign:"left" }}>
               {n.icon} {n.label}
@@ -440,13 +471,20 @@ export default function App() {
         </div>
       )}
 
-      {/* Page */}
-      <div style={{ padding:isMobile?"14px 14px":"24px 28px", maxWidth:1200, margin:"0 auto" }}>
-        {page!=="new"&&<h1 style={{ margin:"0 0 16px", fontSize:isMobile?17:20, color:C.navy, fontWeight:800 }}>{navItems.find(n=>n.id===page)?.label}</h1>}
-        {page==="dashboard"&&<Dashboard leads={leads}/>}
-        {page==="leads"&&<LeadsList leads={leads} onSelect={setSelectedLead}/>}
-        {page==="new"&&<NewLeadForm leads={leads} onSave={handleSave} onCancel={()=>setPage("leads")}/>}
-        {page==="followups"&&<Followups leads={leads}/>}
+      <div style={{ padding:isMobile?"14px":"24px 28px", maxWidth:1200, margin:"0 auto" }}>
+        {loading?(
+          <div style={{ textAlign:"center", padding:"80px 20px" }}>
+            <div style={{ fontSize:32, marginBottom:12 }}>⏳</div>
+            <div style={{ color:C.muted, fontSize:14 }}>Loading leads from Google Sheet...</div>
+          </div>
+        ):(
+          <>
+            {page!=="new"&&<h1 style={{ margin:"0 0 16px", fontSize:isMobile?17:20, color:C.navy, fontWeight:800 }}>{navItems.find(n=>n.id===page)?.label} <span style={{ fontSize:13, color:C.muted, fontWeight:400 }}>({leads.length} leads)</span></h1>}
+            {page==="dashboard"&&<Dashboard leads={leads}/>}
+            {page==="leads"&&<LeadsList leads={leads} onSelect={setSelectedLead}/>}
+            {page==="new"&&<NewLeadForm leads={leads} onSave={handleSave} onCancel={()=>setPage("leads")} currentUser={currentUser}/>}
+          </>
+        )}
       </div>
 
       {selectedLead&&<LeadModal lead={selectedLead} onClose={()=>setSelectedLead(null)}/>}
